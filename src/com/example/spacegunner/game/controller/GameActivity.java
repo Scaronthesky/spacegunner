@@ -8,6 +8,7 @@ import java.util.Random;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -32,6 +33,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 	private ViewGroup gameArea;
 	private int displayWidth;
 	private Random random;
+	private MediaPlayer mediaPlayer;
 
 	@Override
 	public void onCreate(Bundle savedInstance) {
@@ -43,6 +45,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		this.gameArea = (ViewGroup) findViewById(R.id.gamearea);
 		this.displayWidth = getResources().getDisplayMetrics().widthPixels;
 		this.random = new Random();
+		this.mediaPlayer = MediaPlayer.create(this, R.raw.gunshot);
 		startGame();
 	}
 
@@ -56,7 +59,8 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		Log.d(TAG, "startNextLevel");
 		this.model.startNextLevel();
 		Log.d(TAG, "Started next level: " + model);
-		Toast.makeText(this, "Starting level: " + this.model.getLevel(), Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Starting level: " + this.model.getLevel(),
+				Toast.LENGTH_SHORT).show();
 		handler.postDelayed(this, 1000);
 		refreshScreen();
 	}
@@ -70,7 +74,8 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		this.model.countdownTime();
 		final float randomValue = this.random.nextFloat();
 		// display 50 per cent more ships than necessary
-		final double probability = this.model.getShipsToDestroy() * 1.5f / GameModel.INTERVALL;
+		final double probability = this.model.getShipsToDestroy() * 1.5f
+				/ GameModel.INTERVALL;
 		// if the probability is above 1, two ships might have to be displayed
 		if (probability > 1) {
 			displayShip();
@@ -138,6 +143,8 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 
 	@Override
 	public void onClick(View ship) {
+		this.mediaPlayer.seekTo(0);
+		this.mediaPlayer.start();
 		this.model.shipDestroyed();
 		this.gameArea.removeView(ship);
 		refreshScreen();
@@ -164,5 +171,11 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 				android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
 		dialog.setContentView(R.layout.gameover);
 		dialog.show();
+	}
+
+	@Override
+	protected void onDestroy() {
+		mediaPlayer.release();
+		super.onDestroy();
 	}
 }
