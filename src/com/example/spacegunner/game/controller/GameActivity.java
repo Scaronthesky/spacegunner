@@ -56,7 +56,8 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		Log.d(TAG, "startNextLevel");
 		this.model.startNextLevel();
 		Log.d(TAG, "Started next level: " + model);
-		Toast.makeText(this, "Starting level: " + this.model.getLevel(), Toast.LENGTH_LONG).show();
+		Toast.makeText(this, "Starting level: " + this.model.getLevel(), Toast.LENGTH_SHORT).show();
+		handler.postDelayed(this, 1000);
 		refreshScreen();
 	}
 
@@ -115,7 +116,6 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 	}
 
 	private void displayShip() {
-		Log.d(TAG, "displayShip");
 		final int gameAreaWidth = this.gameArea.getWidth();
 		final int gameAreaHeight = this.gameArea.getHeight();
 		final int shipWidth = (int) Math.round(getResources().getDrawable(
@@ -123,9 +123,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		final int shipHeight = (int) Math.round(getResources().getDrawable(
 				R.drawable.spaceship).getMinimumHeight());
 		final int shipXPos = random.nextInt(gameAreaWidth - shipWidth);
-		Log.d(TAG, "ship x pos: " + shipXPos);
 		final int shipYPos = random.nextInt(gameAreaHeight - shipHeight);
-		Log.d(TAG, "ship y pos: " + shipYPos);
 		final ImageView ship = new ImageView(this);
 		ship.setImageResource(R.drawable.spaceship);
 		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
@@ -140,7 +138,6 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 
 	@Override
 	public void onClick(View ship) {
-		Log.d(TAG, "shipDestroyed");
 		this.model.shipDestroyed();
 		this.gameArea.removeView(ship);
 		refreshScreen();
@@ -154,7 +151,6 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 			Date displayDate = (Date) ship.getTag(R.id.displaydate);
 			long timeShown = (new Date()).getTime() - displayDate.getTime();
 			if (timeShown > GameModel.MAXIMUM_TIME_SHOWN) {
-				Log.d(TAG, "Removing ship");
 				this.gameArea.removeView(ship);
 			} else {
 				counter++;
