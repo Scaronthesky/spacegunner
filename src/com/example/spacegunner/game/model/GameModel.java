@@ -3,6 +3,7 @@ package com.example.spacegunner.game.model;
 public class GameModel {
 
 	public static final long MAXIMUM_TIME_SHOWN = 2000;
+	public static final int INTERVALL = 60;
 	private boolean isGameRunning;
 	private int level;
 	private int points;
@@ -18,6 +19,7 @@ public class GameModel {
 		this.isGameRunning = false;
 		this.level = 0;
 		this.points = 0;
+		this.shipsDestroyed = 0;
 		this.shipsToDestroy = 0;
 		this.time = 0;
 	}
@@ -50,17 +52,17 @@ public class GameModel {
 	public void countdownTime() {
 		this.time--;
 	}
-	
+
 	/**
 	 * Start the next level.
 	 */
 	public void startNextLevel() {
 		this.level++;
 		this.shipsToDestroy = this.level * 7;
-		this.shipsDestroyed  = 0;
+		this.shipsDestroyed = 0;
 		this.time = 60;
 	}
-	
+
 	/**
 	 * @return whether the current level is finished
 	 */
@@ -73,13 +75,6 @@ public class GameModel {
 	 */
 	public boolean isGameOver() {
 		return getTime() == 0 && getShipsDestroyed() < getShipsToDestroy();
-	}
-
-	/**
-	 * @return the isGameRunning
-	 */
-	public boolean isGameRunning() {
-		return isGameRunning;
 	}
 
 	/**

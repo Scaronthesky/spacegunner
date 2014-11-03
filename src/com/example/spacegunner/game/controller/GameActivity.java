@@ -19,6 +19,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.spacegunner.R;
 import com.example.spacegunner.game.model.GameModel;
@@ -29,7 +30,6 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 	private Handler handler;
 	private GameModel model;
 	private ViewGroup gameArea;
-	private float displayScale;
 	private int displayWidth;
 	private Random random;
 
@@ -41,10 +41,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		this.handler = new Handler();
 		this.model = new GameModel();
 		this.gameArea = (ViewGroup) findViewById(R.id.gamearea);
-		this.displayScale = getResources().getDisplayMetrics().density;
-		Log.d(TAG, "displayScale:" + displayScale);
 		this.displayWidth = getResources().getDisplayMetrics().widthPixels;
-		Log.d(TAG, "displayWidth:" + displayWidth);
 		this.random = new Random();
 		startGame();
 	}
@@ -59,8 +56,8 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		Log.d(TAG, "startNextLevel");
 		this.model.startNextLevel();
 		Log.d(TAG, "Started next level: " + model);
+		Toast.makeText(this, "Starting level: " + this.model.getLevel(), Toast.LENGTH_LONG).show();
 		refreshScreen();
-		handler.postDelayed(this, 1000);
 	}
 
 	@Override
@@ -72,7 +69,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		this.model.countdownTime();
 		final float randomValue = this.random.nextFloat();
 		// display 50 per cent more ships than necessary
-		final double probability = this.model.getShipsToDestroy() * 1.5f / 60;
+		final double probability = this.model.getShipsToDestroy() * 1.5f / GameModel.INTERVALL;
 		// if the probability is above 1, two ships might have to be displayed
 		if (probability > 1) {
 			displayShip();
@@ -105,26 +102,22 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		final TextView tvTime = (TextView) findViewById(R.id.time);
 		tvTime.setText("Time left: " + Integer.toString(this.model.getTime()));
 		// refresh width of the hits and time bars
-		final int textViewWidth = 500;
+		final int textViewWidth = Math.round(this.displayWidth / 4);
 		final FrameLayout flHits = (FrameLayout) findViewById(R.id.barhits);
 		final LayoutParams lpHits = flHits.getLayoutParams();
 		lpHits.width = Math.round((displayWidth - textViewWidth)
 				* this.model.getShipsDestroyed()
 				/ this.model.getShipsToDestroy());
-		Log.d(TAG, "Hits width: " + lpHits.width);
 		final FrameLayout flTime = (FrameLayout) findViewById(R.id.bartime);
 		final LayoutParams lpTime = flTime.getLayoutParams();
 		lpTime.width = Math.round((displayWidth - textViewWidth)
-				* this.model.getTime() / 60);
-		Log.d(TAG, "Time width: " + lpTime.width);
+				* this.model.getTime() / GameModel.INTERVALL);
 	}
 
 	private void displayShip() {
 		Log.d(TAG, "displayShip");
 		final int gameAreaWidth = this.gameArea.getWidth();
 		final int gameAreaHeight = this.gameArea.getHeight();
-		// final int shipWidth = (int) Math.round(displayScale * 50);
-		// final int shipHeight = (int) Math.round(displayScale * 50);
 		final int shipWidth = (int) Math.round(getResources().getDrawable(
 				R.drawable.spaceship).getMinimumWidth());
 		final int shipHeight = (int) Math.round(getResources().getDrawable(
@@ -161,7 +154,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 			Date displayDate = (Date) ship.getTag(R.id.displaydate);
 			long timeShown = (new Date()).getTime() - displayDate.getTime();
 			if (timeShown > GameModel.MAXIMUM_TIME_SHOWN) {
-				Log.d(TAG, "Remove ship");
+				Log.d(TAG, "Removing ship");
 				this.gameArea.removeView(ship);
 			} else {
 				counter++;
