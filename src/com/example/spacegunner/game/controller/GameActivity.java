@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +36,8 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 	private int displayWidth;
 	private Random random;
 	private MediaPlayer mediaPlayer;
+	private Animation quickFadeIn;
+	private Animation quickFadeOut;
 
 	@Override
 	public void onCreate(Bundle savedInstance) {
@@ -46,6 +50,8 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		this.displayWidth = getResources().getDisplayMetrics().widthPixels;
 		this.random = new Random();
 		this.mediaPlayer = MediaPlayer.create(this, R.raw.gunshot);
+		this.quickFadeIn = AnimationUtils.loadAnimation(this, R.anim.quickfadein);
+		this.quickFadeOut = AnimationUtils.loadAnimation(this, R.anim.quickfadeout);
 		startGame();
 	}
 
@@ -139,6 +145,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		ship.setTag(R.id.displaydate, new Date());
 		ship.setOnClickListener(this);
 		this.gameArea.addView(ship, params);
+		ship.startAnimation(quickFadeIn);
 	}
 
 	@Override
@@ -146,6 +153,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		this.mediaPlayer.seekTo(0);
 		this.mediaPlayer.start();
 		this.model.shipDestroyed();
+		ship.startAnimation(quickFadeOut);
 		this.gameArea.removeView(ship);
 		refreshScreen();
 	}
@@ -158,6 +166,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 			Date displayDate = (Date) ship.getTag(R.id.displaydate);
 			long timeShown = (new Date()).getTime() - displayDate.getTime();
 			if (timeShown > GameModel.MAXIMUM_TIME_SHOWN) {
+				ship.startAnimation(quickFadeOut);
 				this.gameArea.removeView(ship);
 			} else {
 				counter++;
@@ -166,6 +175,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 	}
 
 	private void endGame() {
+		Log.d(TAG, "Game over: " + this.model);
 		this.model.stopGame();
 		Dialog dialog = new Dialog(this,
 				android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);

@@ -112,17 +112,16 @@ public class GameModel {
 		return time;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "GameModel [isGameRunning=" + isGameRunning + ", level=" + level
-				+ ", points=" + points + ", shipsToDisplay=" + shipsToDestroy
-				+ ", shipsDestroyed=" + shipsDestroyed + ", secondsToPlay="
-				+ time + "]";
+		return "GameModel [level=" + level + ", points=" + points
+				+ ", shipsDestroyed=" + shipsDestroyed + ", shipsToDestroy="
+				+ shipsToDestroy + ", time=" + time + "]";
 	}
+
+	
 
 }
