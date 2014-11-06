@@ -18,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -36,8 +37,8 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 	private int displayWidth;
 	private Random random;
 	private MediaPlayer mediaPlayer;
-	private Animation quickFadeIn;
-	private Animation quickFadeOut;
+	private long frame;
+	private static final int INTERVALL_MS = 50;
 
 	@Override
 	public void onCreate(Bundle savedInstance) {
@@ -50,30 +51,40 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		this.displayWidth = getResources().getDisplayMetrics().widthPixels;
 		this.random = new Random();
 		this.mediaPlayer = MediaPlayer.create(this, R.raw.gunshot);
-		this.quickFadeIn = AnimationUtils.loadAnimation(this, R.anim.quickfadein);
-		this.quickFadeOut = AnimationUtils.loadAnimation(this, R.anim.quickfadeout);
 		startGame();
 	}
 
 	private void startGame() {
 		Log.d(TAG, "startGame");
-		model.startGame();
 		startNextLevel();
 	}
 
 	private void startNextLevel() {
 		Log.d(TAG, "startNextLevel");
+		this.frame = 0;
 		this.model.startNextLevel();
 		Log.d(TAG, "Started next level: " + model);
 		Toast.makeText(this, "Starting level: " + this.model.getLevel(),
 				Toast.LENGTH_SHORT).show();
-		handler.postDelayed(this, 1000);
 		refreshScreen();
+		handler.postDelayed(this, INTERVALL_MS);
 	}
 
 	@Override
 	public void run() {
-		countDown();
+		moveShipsToNewLocation();
+		this.frame++;
+		if (frame >= 1000 / INTERVALL_MS) {
+			countDown();
+			frame = 0;
+		}
+		if (this.model.isGameOver()) {
+			endGame();
+		} else if (this.model.isLevelFinished()) {
+			startNextLevel();
+		} else {
+			handler.postDelayed(this, INTERVALL_MS);
+		}
 	}
 
 	private void countDown() {
@@ -81,7 +92,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		final float randomValue = this.random.nextFloat();
 		// display 50 per cent more ships than necessary
 		final double probability = this.model.getShipsToDestroy() * 1.5f
-				/ GameModel.INTERVALL;
+				/ GameModel.SECONDS_PER_LEVEL;
 		// if the probability is above 1, two ships might have to be displayed
 		if (probability > 1) {
 			displayShip();
@@ -93,13 +104,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		}
 		removeShips();
 		refreshScreen();
-		if (this.model.isGameOver()) {
-			endGame();
-		} else if (this.model.isLevelFinished()) {
-			startNextLevel();
-		} else {
-			handler.postDelayed(this, 1000);
-		}
+
 	}
 
 	private void refreshScreen() {
@@ -123,7 +128,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		final FrameLayout flTime = (FrameLayout) findViewById(R.id.bartime);
 		final LayoutParams lpTime = flTime.getLayoutParams();
 		lpTime.width = Math.round((displayWidth - textViewWidth)
-				* this.model.getTime() / GameModel.INTERVALL);
+				* this.model.getTime() / GameModel.SECONDS_PER_LEVEL);
 	}
 
 	private void displayShip() {
@@ -135,6 +140,11 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 				R.drawable.spaceship).getMinimumHeight());
 		final int shipXPos = random.nextInt(gameAreaWidth - shipWidth);
 		final int shipYPos = random.nextInt(gameAreaHeight - shipHeight);
+		int vektorX, vektorY;
+		do {
+			vektorX = this.random.nextInt(3) - 1;
+			vektorY = this.random.nextInt(3) - 1;
+		} while (vektorX == 0 && vektorY == 0);
 		final ImageView ship = new ImageView(this);
 		ship.setImageResource(R.drawable.spaceship);
 		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
@@ -143,19 +153,66 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		params.topMargin = shipYPos;
 		params.gravity = Gravity.TOP + Gravity.LEFT;
 		ship.setTag(R.id.displaydate, new Date());
-		ship.setOnClickListener(this);
+		ship.setTag(R.id.vx, Integer.valueOf(vektorX));
+		ship.setTag(R.id.vy, Integer.valueOf(vektorY));
 		this.gameArea.addView(ship, params);
+		Animation quickFadeIn = AnimationUtils.loadAnimation(this,
+				R.anim.quickfadein);
 		ship.startAnimation(quickFadeIn);
+		ship.setOnClickListener(this);
+	}
+
+	private void moveShipsToNewLocation() {
+		int counter = 0;
+		while (counter < this.gameArea.getChildCount()) {
+			ImageView ship = (ImageView) gameArea.getChildAt(counter);
+			Integer vektorX = (Integer) ship.getTag(R.id.vx);
+			Integer vektorY = (Integer) ship.getTag(R.id.vy);
+			FrameLayout.LayoutParams params = (android.widget.FrameLayout.LayoutParams) ship
+					.getLayoutParams();
+			params.leftMargin += vektorX * this.model.getLevel();
+			params.topMargin += vektorY * this.model.getLevel();
+			ship.setLayoutParams(params);
+			counter++;
+		}
 	}
 
 	@Override
 	public void onClick(View ship) {
+		this.model.shipDestroyed();
 		this.mediaPlayer.seekTo(0);
 		this.mediaPlayer.start();
-		this.model.shipDestroyed();
-		ship.startAnimation(quickFadeOut);
-		this.gameArea.removeView(ship);
+		final Animation hit = AnimationUtils.loadAnimation(this, R.anim.hit);
+		hit.setAnimationListener(new HitAnimationListener(ship));
+		ship.startAnimation(hit);
+		ship.setOnClickListener(null);
 		refreshScreen();
+	}
+
+	private class HitAnimationListener implements AnimationListener {
+		private View ship;
+
+		public HitAnimationListener(View ship) {
+			this.ship = ship;
+		}
+
+		@Override
+		public void onAnimationStart(Animation animation) {
+		}
+
+		@Override
+		public void onAnimationEnd(Animation animation) {
+			handler.post(new Runnable() {
+				@Override
+				public void run() {
+					gameArea.removeView(ship);
+				}
+			});
+		}
+
+		@Override
+		public void onAnimationRepeat(Animation animation) {
+		}
 	}
 
 	// TODO Use joda time
@@ -166,6 +223,8 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 			Date displayDate = (Date) ship.getTag(R.id.displaydate);
 			long timeShown = (new Date()).getTime() - displayDate.getTime();
 			if (timeShown > GameModel.MAXIMUM_TIME_SHOWN) {
+				Animation quickFadeOut = AnimationUtils.loadAnimation(this,
+						R.anim.quickfadeout);
 				ship.startAnimation(quickFadeOut);
 				this.gameArea.removeView(ship);
 			} else {
@@ -176,11 +235,16 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 
 	private void endGame() {
 		Log.d(TAG, "Game over: " + this.model);
-		this.model.stopGame();
 		Dialog dialog = new Dialog(this,
 				android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
 		dialog.setContentView(R.layout.gameover);
 		dialog.show();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		handler.removeCallbacks(this);
 	}
 
 	@Override

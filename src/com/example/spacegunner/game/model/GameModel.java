@@ -2,9 +2,9 @@ package com.example.spacegunner.game.model;
 
 public class GameModel {
 
+	private static final int SHIP_MULTIPLIER = 10;
 	public static final long MAXIMUM_TIME_SHOWN = 2000;
-	public static final int INTERVALL = 60;
-	private boolean isGameRunning;
+	public static final int SECONDS_PER_LEVEL = 60;
 	private int level;
 	private int points;
 	private int shipsToDestroy;
@@ -16,7 +16,6 @@ public class GameModel {
 	 */
 	public GameModel() {
 		super();
-		this.isGameRunning = false;
 		this.level = 0;
 		this.points = 0;
 		this.shipsDestroyed = 0;
@@ -24,19 +23,6 @@ public class GameModel {
 		this.time = 0;
 	}
 
-	/**
-	 * Start the game
-	 */
-	public void startGame() {
-		this.isGameRunning = true;
-	}
-
-	/**
-	 * Stop the game
-	 */
-	public void stopGame() {
-		this.isGameRunning = false;
-	}
 
 	/**
 	 * Called whenever a ship is destroyed.
@@ -58,9 +44,9 @@ public class GameModel {
 	 */
 	public void startNextLevel() {
 		this.level++;
-		this.shipsToDestroy = this.level * 7;
+		this.shipsToDestroy = this.level * SHIP_MULTIPLIER;
 		this.shipsDestroyed = 0;
-		this.time = 60;
+		this.time = SECONDS_PER_LEVEL;
 	}
 
 	/**
