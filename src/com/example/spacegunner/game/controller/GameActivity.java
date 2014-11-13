@@ -39,6 +39,9 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 	private MediaPlayer mediaPlayer;
 	private long frame;
 	private static final int INTERVALL_MS = 50;
+	private static final String SPACESHIP_IMAGE = "spaceship_";
+	private static final String CARDINAL_DIRECTIONS[][] = {
+			{ "nw", "n", "ne" }, { "w", "", "e" }, { "sw", "s", "se" } };
 
 	@Override
 	public void onCreate(Bundle savedInstance) {
@@ -146,7 +149,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 			vektorY = this.random.nextInt(3) - 1;
 		} while (vektorX == 0 && vektorY == 0);
 		final ImageView ship = new ImageView(this);
-		ship.setImageResource(R.drawable.spaceship);
+		setShipImage(ship, vektorX, vektorY);
 		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
 				shipWidth, shipHeight);
 		params.leftMargin = shipXPos;
@@ -160,6 +163,12 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 				R.anim.quickfadein);
 		ship.startAnimation(quickFadeIn);
 		ship.setOnClickListener(this);
+	}
+
+	private void setShipImage(ImageView ship, int vektorX, int vektorY) {
+		ship.setImageResource(getResources().getIdentifier(
+				SPACESHIP_IMAGE + CARDINAL_DIRECTIONS[vektorY + 1][vektorX + 1], "drawable",
+				this.getPackageName()));
 	}
 
 	private void moveShipsToNewLocation() {
