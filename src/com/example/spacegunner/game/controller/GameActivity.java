@@ -256,6 +256,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 				android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
 		dialog.setContentView(R.layout.gameover);
 		dialog.show();
+		setResult(this.model.getPoints());
 	}
 
 	@Override
