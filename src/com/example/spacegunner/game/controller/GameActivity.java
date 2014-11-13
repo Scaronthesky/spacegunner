@@ -148,6 +148,12 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 			vektorX = this.random.nextInt(3) - 1;
 			vektorY = this.random.nextInt(3) - 1;
 		} while (vektorX == 0 && vektorY == 0);
+		double correctionalFactor = 1.0;
+		if (vektorX != 0 && vektorY != 0) {
+			correctionalFactor = 0.70710678;
+		}
+		vektorX = (int) Math.round(vektorX * correctionalFactor);
+		vektorY = (int) Math.round(vektorY * correctionalFactor);
 		final ImageView ship = new ImageView(this);
 		setShipImage(ship, vektorX, vektorY);
 		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
@@ -166,9 +172,11 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 	}
 
 	private void setShipImage(ImageView ship, int vektorX, int vektorY) {
-		ship.setImageResource(getResources().getIdentifier(
-				SPACESHIP_IMAGE + CARDINAL_DIRECTIONS[vektorY + 1][vektorX + 1], "drawable",
-				this.getPackageName()));
+		ship.setImageResource(getResources()
+				.getIdentifier(
+						SPACESHIP_IMAGE
+								+ CARDINAL_DIRECTIONS[vektorY + 1][vektorX + 1],
+						"drawable", this.getPackageName()));
 	}
 
 	private void moveShipsToNewLocation() {
