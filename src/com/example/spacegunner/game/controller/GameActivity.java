@@ -53,7 +53,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		this.gameArea = (ViewGroup) findViewById(R.id.gamearea);
 		this.displayWidth = getResources().getDisplayMetrics().widthPixels;
 		this.random = new Random();
-		this.mediaPlayer = MediaPlayer.create(this, R.raw.gunshot);
+		this.mediaPlayer = MediaPlayer.create(this, R.raw.explosion);
 		startGame();
 	}
 
