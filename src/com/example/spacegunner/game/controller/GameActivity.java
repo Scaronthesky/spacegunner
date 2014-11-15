@@ -196,25 +196,27 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 
 	@Override
 	public void onClick(View ship) {
+		ImageView destroyedShip = (ImageView) ship;
+		destroyedShip.setOnClickListener(null);
 		this.model.shipDestroyed();
 		this.mediaPlayer.seekTo(0);
 		this.mediaPlayer.start();
 		final Animation hit = AnimationUtils.loadAnimation(this, R.anim.hit);
-		hit.setAnimationListener(new HitAnimationListener(ship));
-		ship.startAnimation(hit);
-		ship.setOnClickListener(null);
+		hit.setAnimationListener(new HitAnimationListener(destroyedShip));
+		destroyedShip.startAnimation(hit);
 		refreshScreen();
 	}
 
 	private class HitAnimationListener implements AnimationListener {
-		private View ship;
+		private ImageView destroyedShip;
 
-		public HitAnimationListener(View ship) {
-			this.ship = ship;
+		public HitAnimationListener(ImageView destroyedShip) {
+			this.destroyedShip = destroyedShip;
 		}
 
 		@Override
 		public void onAnimationStart(Animation animation) {
+			destroyedShip.setImageResource(R.drawable.explosion);		
 		}
 
 		@Override
@@ -222,7 +224,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 			handler.post(new Runnable() {
 				@Override
 				public void run() {
-					gameArea.removeView(ship);
+					gameArea.removeView(destroyedShip);
 				}
 			});
 		}
