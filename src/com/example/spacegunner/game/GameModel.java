@@ -1,4 +1,4 @@
-package com.example.spacegunner.game.model;
+package com.example.spacegunner.game;
 
 public class GameModel {
 

@@ -1,4 +1,4 @@
-package com.example.spacegunner.game.controller;
+package com.example.spacegunner.game;
 
 import static com.example.spacegunner.constants.Constants.TAG;
 
@@ -8,6 +8,7 @@ import java.util.Random;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,7 +27,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.spacegunner.R;
-import com.example.spacegunner.game.model.GameModel;
+import com.example.spacegunner.constants.Constants;
+import com.example.spacegunner.highscore.HighscoreActivity;
+import com.example.spacegunner.ioservice.IOService;
+import com.example.spacegunner.ioservice.PlayerHighscore;
+import com.example.spacegunner.main.MainActivity;
 
 @SuppressLint("RtlHardcoded")
 public class GameActivity extends Activity implements OnClickListener, Runnable {
@@ -39,6 +44,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 	private MediaPlayer mediaPlayer;
 	private long frame;
 	private static final int INTERVALL_MS = 50;
+	private static final long SHOW_GAME_OVER = 5000;
 	private static final String SPACESHIP_IMAGE = "spaceship_";
 	private static final String CARDINAL_DIRECTIONS[][] = {
 			{ "nw", "n", "ne" }, { "w", "", "e" }, { "sw", "s", "se" } };
@@ -216,7 +222,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 
 		@Override
 		public void onAnimationStart(Animation animation) {
-			destroyedShip.setImageResource(R.drawable.explosion);		
+			destroyedShip.setImageResource(R.drawable.explosion);
 		}
 
 		@Override
@@ -254,11 +260,18 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 
 	private void endGame() {
 		Log.d(TAG, "Game over: " + this.model);
-		Dialog dialog = new Dialog(this,
-				android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
-		dialog.setContentView(R.layout.gameover);
-		dialog.show();
-		setResult(this.model.getPoints());
+		// TODO: Show game over screen
+		Toast.makeText(this, getResources().getString(R.string.game_over), Toast.LENGTH_SHORT ).show();
+		IOService ioService = new IOService(this);
+		PlayerHighscore currentHighscore = ioService.readHighscore();
+		int points = this.model.getPoints();
+		if (points > currentHighscore.getHighscore()) {
+			Intent intent = new Intent(this, HighscoreActivity.class);
+			intent.putExtra(Constants.POINTS, points);
+			startActivity(intent);
+		} else {
+			startActivity(new Intent(this, MainActivity.class));
+		}
 	}
 
 	@Override
