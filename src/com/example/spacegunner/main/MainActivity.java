@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.spacegunner.R;
-import com.example.spacegunner.game.GameActivity;
+import com.example.spacegunner.game.GameViewImpl;
 import com.example.spacegunner.ioservice.IOService;
 import com.example.spacegunner.ioservice.PlayerHighscore;
 
@@ -43,7 +43,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		startActivity(new Intent(this, GameActivity.class));
+		startActivity(new Intent(this, GameViewImpl.class));
 	}
 
 }

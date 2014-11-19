@@ -1,112 +1,76 @@
 package com.example.spacegunner.game;
 
-public class GameModel {
-
-	private static final int SHIP_MULTIPLIER = 10;
-	public static final long MAXIMUM_TIME_SHOWN = 2000;
-	public static final int SECONDS_PER_LEVEL = 60;
-	private int level;
-	private int points;
-	private int shipsToDestroy;
-	private int shipsDestroyed;
-	private int time;
-
-	/**
-	 * The game model representation.
-	 */
-	public GameModel() {
-		super();
-		this.level = 0;
-		this.points = 0;
-		this.shipsDestroyed = 0;
-		this.shipsToDestroy = 0;
-		this.time = 0;
-	}
-
-
-	/**
-	 * Called whenever a ship is destroyed.
-	 */
-	public void shipDestroyed() {
-		this.shipsDestroyed++;
-		this.points += 100;
-	}
-
-	/**
-	 * Countdown the time.
-	 */
-	public void countdownTime() {
-		this.time--;
-	}
+public interface GameModel {
 
 	/**
 	 * Start the next level.
 	 */
-	public void startNextLevel() {
-		this.level++;
-		this.shipsToDestroy = this.level * SHIP_MULTIPLIER;
-		this.shipsDestroyed = 0;
-		this.time = SECONDS_PER_LEVEL;
-	}
+	public void startNextLevel();
+
+	/**
+	 * Count down the time.
+	 */
+	public void countdownTime();
+
+	/**
+	 * Called whenever a ship is destroyed.
+	 */
+	public void shipDestroyed();
 
 	/**
 	 * @return whether the current level is finished
 	 */
-	public boolean isLevelFinished() {
-		return getShipsDestroyed() >= getShipsToDestroy();
-	}
+	public boolean isLevelFinished();
 
 	/**
 	 * @return whether the current game is over
 	 */
-	public boolean isGameOver() {
-		return getTime() == 0 && getShipsDestroyed() < getShipsToDestroy();
-	}
+	public boolean isGameOver();
 
 	/**
 	 * @return the level
 	 */
-	public int getLevel() {
-		return level;
-	}
+	public int getLevel();
+
+	/**
+	 * @return the speed modifier of the ships.
+	 */
+	public int getSpeedModifier();
 
 	/**
 	 * @return the points
 	 */
-	public int getPoints() {
-		return points;
-	}
+	public int getPoints();
 
 	/**
 	 * @return the shipsToDisplay
 	 */
-	public int getShipsToDestroy() {
-		return shipsToDestroy;
-	}
+	public int getShipsToDestroy();
 
 	/**
 	 * @return the shipsDestroyed
 	 */
-	public int getShipsDestroyed() {
-		return shipsDestroyed;
-	}
+	public int getShipsDestroyed();
 
 	/**
 	 * @return the secondsToPlay
 	 */
-	public int getTime() {
-		return time;
-	}
+	public int getTime();
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
+	/**
+	 * @return the secondsPerLevel
 	 */
-	@Override
-	public String toString() {
-		return "GameModel [level=" + level + ", points=" + points
-				+ ", shipsDestroyed=" + shipsDestroyed + ", shipsToDestroy="
-				+ shipsToDestroy + ", time=" + time + "]";
-	}
+	public int getSecondsPerLevel();
+
+	/**
+	 * @return the maximum time a ship should be shown
+	 */
+	public int getMaximumTimeShown();
+
+	/**
+	 * @return the toString() method.
+	 */
+	public String toString();
 
 	
 

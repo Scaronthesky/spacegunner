@@ -7,11 +7,9 @@ import java.util.Random;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -34,17 +32,17 @@ import com.example.spacegunner.ioservice.PlayerHighscore;
 import com.example.spacegunner.main.MainActivity;
 
 @SuppressLint("RtlHardcoded")
-public class GameActivity extends Activity implements OnClickListener, Runnable {
+public class GameViewImpl extends Activity implements OnClickListener, GameView {
 
-	private Handler handler;
-	private GameModel model;
+	private GamePresenter presenter;
+
 	private ViewGroup gameArea;
 	private int displayWidth;
 	private Random random;
 	private MediaPlayer mediaPlayer;
 	private long frame;
-	private static final int INTERVALL_MS = 50;
-	private static final long SHOW_GAME_OVER = 5000;
+	private ImageView destroyedShip;
+	private IOService ioService;
 	private static final String SPACESHIP_IMAGE = "spaceship_";
 	private static final String CARDINAL_DIRECTIONS[][] = {
 			{ "nw", "n", "ne" }, { "w", "", "e" }, { "sw", "s", "se" } };
@@ -54,93 +52,83 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		super.onCreate(savedInstance);
 		Log.d(TAG, "onCreate");
 		setContentView(R.layout.game);
-		this.handler = new Handler();
-		this.model = new GameModel();
 		this.gameArea = (ViewGroup) findViewById(R.id.gamearea);
 		this.displayWidth = getResources().getDisplayMetrics().widthPixels;
 		this.random = new Random();
 		this.mediaPlayer = MediaPlayer.create(this, R.raw.explosion);
-		startGame();
-	}
-
-	private void startGame() {
-		Log.d(TAG, "startGame");
-		startNextLevel();
-	}
-
-	private void startNextLevel() {
-		Log.d(TAG, "startNextLevel");
 		this.frame = 0;
-		this.model.startNextLevel();
-		Log.d(TAG, "Started next level: " + model);
-		Toast.makeText(this, "Starting level: " + this.model.getLevel(),
-				Toast.LENGTH_SHORT).show();
-		refreshScreen();
-		handler.postDelayed(this, INTERVALL_MS);
+		this.ioService = new IOService(this);
+		this.presenter = new GamePresenterImpl(this);
+		this.presenter.startGame();
 	}
 
 	@Override
-	public void run() {
-		moveShipsToNewLocation();
+	public void showLevelStartInfo(int level) {
+		Toast.makeText(this, "Starting level: " + level, Toast.LENGTH_SHORT)
+		.show();
+	}
+
+	@Override
+	public void increaseFrame() {
 		this.frame++;
-		if (frame >= 1000 / INTERVALL_MS) {
-			countDown();
-			frame = 0;
-		}
-		if (this.model.isGameOver()) {
-			endGame();
-		} else if (this.model.isLevelFinished()) {
-			startNextLevel();
-		} else {
-			handler.postDelayed(this, INTERVALL_MS);
-		}
 	}
 
-	private void countDown() {
-		this.model.countdownTime();
-		final float randomValue = this.random.nextFloat();
-		// display 50 per cent more ships than necessary
-		final double probability = this.model.getShipsToDestroy() * 1.5f
-				/ GameModel.SECONDS_PER_LEVEL;
-		// if the probability is above 1, two ships might have to be displayed
-		if (probability > 1) {
-			displayShip();
-			if (randomValue < probability - 1) {
-				displayShip();
-			}
-		} else if (randomValue < probability) {
-			displayShip();
-		}
-		removeShips();
-		refreshScreen();
-
+	@Override
+	public long getFrame() {
+		return frame;
 	}
 
-	private void refreshScreen() {
-		// refresh text views with values from game model
-		final TextView tvPoints = (TextView) findViewById(R.id.points);
-		tvPoints.setText("Points: " + Integer.toString(this.model.getPoints()));
-		final TextView tvLevel = (TextView) findViewById(R.id.level);
-		tvLevel.setText("Level: " + Integer.toString(this.model.getLevel()));
-		final TextView tvHits = (TextView) findViewById(R.id.hits);
-		tvHits.setText("Destroyed: "
-				+ Integer.toString(this.model.getShipsDestroyed()));
+	@Override
+	public void resetFrame() {
+		this.frame = 0;
+	}
+	
+	
+	@Override
+	public void setTime(final int time) {
 		final TextView tvTime = (TextView) findViewById(R.id.time);
-		tvTime.setText("Time left: " + Integer.toString(this.model.getTime()));
-		// refresh width of the hits and time bars
+		tvTime.setText("Time left: " + Integer.toString(time));
+	}
+
+	@Override
+	public void setHits(final int shipsDestroyed) {
+		final TextView tvHits = (TextView) findViewById(R.id.hits);
+		tvHits.setText("Destroyed: " + Integer.toString(shipsDestroyed));
+	}
+
+	@Override
+	public void setLevel(final int level) {
+		final TextView tvLevel = (TextView) findViewById(R.id.level);
+		tvLevel.setText("Level: " + Integer.toString(level));
+	}
+
+	@Override
+	public void setPoints(final int points) {
+		final TextView tvPoints = (TextView) findViewById(R.id.points);
+		tvPoints.setText("Points: " + Integer.toString(points));
+	}
+
+	@Override
+	public void setTimeBarWidth(final int time, final int secondsPerLevel) {
+		final int textViewWidth = Math.round(this.displayWidth / 4);
+		final FrameLayout flTime = (FrameLayout) findViewById(R.id.bartime);
+		final LayoutParams lpTime = flTime.getLayoutParams();
+		lpTime.width = Math.round((displayWidth - textViewWidth) * time
+				/ secondsPerLevel);
+	}
+
+	@Override
+	public int setHitBarWidth(final int shipsDestroyed, final int shipsToDestroy) {
 		final int textViewWidth = Math.round(this.displayWidth / 4);
 		final FrameLayout flHits = (FrameLayout) findViewById(R.id.barhits);
 		final LayoutParams lpHits = flHits.getLayoutParams();
 		lpHits.width = Math.round((displayWidth - textViewWidth)
-				* this.model.getShipsDestroyed()
-				/ this.model.getShipsToDestroy());
-		final FrameLayout flTime = (FrameLayout) findViewById(R.id.bartime);
-		final LayoutParams lpTime = flTime.getLayoutParams();
-		lpTime.width = Math.round((displayWidth - textViewWidth)
-				* this.model.getTime() / GameModel.SECONDS_PER_LEVEL);
+				* shipsDestroyed / shipsToDestroy);
+		return textViewWidth;
 	}
 
-	private void displayShip() {
+	@Override
+	public void displayShip() {
 		final int gameAreaWidth = this.gameArea.getWidth();
 		final int gameAreaHeight = this.gameArea.getHeight();
 		final int shipWidth = (int) Math.round(getResources().getDrawable(
@@ -185,7 +173,8 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 						"drawable", this.getPackageName()));
 	}
 
-	private void moveShipsToNewLocation() {
+	@Override
+	public void moveShipsToNewLocation(final int speedModifier) {
 		int counter = 0;
 		while (counter < this.gameArea.getChildCount()) {
 			ImageView ship = (ImageView) gameArea.getChildAt(counter);
@@ -193,8 +182,8 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 			Integer vektorY = (Integer) ship.getTag(R.id.vy);
 			FrameLayout.LayoutParams params = (android.widget.FrameLayout.LayoutParams) ship
 					.getLayoutParams();
-			params.leftMargin += vektorX * this.model.getLevel();
-			params.topMargin += vektorY * this.model.getLevel();
+			params.leftMargin += vektorX * speedModifier;
+			params.topMargin += vektorY * speedModifier;
 			ship.setLayoutParams(params);
 			counter++;
 		}
@@ -202,15 +191,22 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 
 	@Override
 	public void onClick(View ship) {
-		ImageView destroyedShip = (ImageView) ship;
+		this.destroyedShip = (ImageView) ship;
 		destroyedShip.setOnClickListener(null);
-		this.model.shipDestroyed();
+		this.presenter.shipDestroyed();
+	}
+
+	@Override
+	public void playExplosionSound() {
 		this.mediaPlayer.seekTo(0);
 		this.mediaPlayer.start();
+	}
+
+	@Override
+	public void showShipDestroyedAnimation() {
 		final Animation hit = AnimationUtils.loadAnimation(this, R.anim.hit);
 		hit.setAnimationListener(new HitAnimationListener(destroyedShip));
 		destroyedShip.startAnimation(hit);
-		refreshScreen();
 	}
 
 	private class HitAnimationListener implements AnimationListener {
@@ -227,12 +223,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 
 		@Override
 		public void onAnimationEnd(Animation animation) {
-			handler.post(new Runnable() {
-				@Override
-				public void run() {
-					gameArea.removeView(destroyedShip);
-				}
-			});
+				gameArea.removeView(destroyedShip);
 		}
 
 		@Override
@@ -241,13 +232,14 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 	}
 
 	// TODO Use joda time
-	private void removeShips() {
+	@Override
+	public void removeShips(final int maximumTimeShown) {
 		int counter = 0;
 		while (counter < this.gameArea.getChildCount()) {
 			ImageView ship = (ImageView) gameArea.getChildAt(counter);
 			Date displayDate = (Date) ship.getTag(R.id.displaydate);
 			long timeShown = (new Date()).getTime() - displayDate.getTime();
-			if (timeShown > GameModel.MAXIMUM_TIME_SHOWN) {
+			if (timeShown > maximumTimeShown) {
 				Animation quickFadeOut = AnimationUtils.loadAnimation(this,
 						R.anim.quickfadeout);
 				ship.startAnimation(quickFadeOut);
@@ -258,26 +250,27 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		}
 	}
 
-	private void endGame() {
-		Log.d(TAG, "Game over: " + this.model);
-		// TODO: Show game over screen
-		Toast.makeText(this, getResources().getString(R.string.game_over), Toast.LENGTH_SHORT ).show();
-		IOService ioService = new IOService(this);
-		PlayerHighscore currentHighscore = ioService.readHighscore();
-		int points = this.model.getPoints();
-		if (points > currentHighscore.getHighscore()) {
-			Intent intent = new Intent(this, HighscoreActivity.class);
-			intent.putExtra(Constants.POINTS, points);
-			startActivity(intent);
-		} else {
-			startActivity(new Intent(this, MainActivity.class));
-		}
+	@Override
+	public PlayerHighscore getHighscore() {
+		return ioService.readHighscore();
+	}
+
+	@Override
+	public void startMainActivity() {
+		startActivity(new Intent(this, MainActivity.class));
+	}
+
+	@Override
+	public void startHighscoreActivity(final int points) {
+		Intent intent = new Intent(this, HighscoreActivity.class);
+		intent.putExtra(Constants.POINTS, points);
+		startActivity(intent);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		handler.removeCallbacks(this);
+		this.presenter.pauseGame();
 	}
 
 	@Override
@@ -285,4 +278,7 @@ public class GameActivity extends Activity implements OnClickListener, Runnable 
 		mediaPlayer.release();
 		super.onDestroy();
 	}
+
+	
+
 }
