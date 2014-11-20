@@ -7,7 +7,7 @@ import android.R;
 import android.app.Activity;
 import android.content.SharedPreferences;
 
-import com.example.spacegunner.main.MainActivity;
+import com.example.spacegunner.main.MainViewImpl;
 
 public class IOService {
 
@@ -17,7 +17,7 @@ public class IOService {
 	public IOService(final Activity activity) {
 		this.activity = activity;
 		this.sharedPreferences = this.activity.getSharedPreferences(GAME,
-				MainActivity.MODE_PRIVATE);
+				MainViewImpl.MODE_PRIVATE);
 	}
 
 	public PlayerHighscore readHighscore() {

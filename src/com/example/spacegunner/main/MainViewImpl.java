@@ -15,8 +15,9 @@ import com.example.spacegunner.game.GameViewImpl;
 import com.example.spacegunner.ioservice.IOService;
 import com.example.spacegunner.ioservice.PlayerHighscore;
 
-public class MainActivity extends Activity implements OnClickListener {
+public class MainViewImpl extends Activity implements OnClickListener, MainView {
 
+	private MainPresenter presenter;
 	private IOService iOService;
 	private Animation fadeIn;
 
@@ -24,6 +25,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		this.presenter = new MainPresenterImpl(this);
 		this.iOService = new IOService(this);
 		this.fadeIn = AnimationUtils.loadAnimation(this, R.anim.fadein);
 		final Button button = (Button) findViewById(R.id.buttonsavename);
@@ -35,7 +37,10 @@ public class MainActivity extends Activity implements OnClickListener {
 		super.onResume();
 		View background = findViewById(R.id.background);
 		background.startAnimation(fadeIn);
-		
+		displayHighscore();
+	}
+
+	private void displayHighscore() {
 		TextView highscorelist = (TextView) findViewById(R.id.highscorelist);
 		PlayerHighscore playerHighscore = iOService.readHighscore();
 		highscorelist.setText(playerHighscore.getPlayerName() + ": " + playerHighscore.getHighscore());
@@ -43,6 +48,11 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
+		this.presenter.startGameButtonClicked();
+	}
+
+	@Override
+	public void startGameActivity() {
 		startActivity(new Intent(this, GameViewImpl.class));
 	}
 

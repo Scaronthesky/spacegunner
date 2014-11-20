@@ -29,7 +29,7 @@ import com.example.spacegunner.constants.Constants;
 import com.example.spacegunner.highscore.HighscoreViewImpl;
 import com.example.spacegunner.ioservice.IOService;
 import com.example.spacegunner.ioservice.PlayerHighscore;
-import com.example.spacegunner.main.MainActivity;
+import com.example.spacegunner.main.MainViewImpl;
 
 @SuppressLint("RtlHardcoded")
 public class GameViewImpl extends Activity implements OnClickListener, GameView {
@@ -257,7 +257,7 @@ public class GameViewImpl extends Activity implements OnClickListener, GameView 
 
 	@Override
 	public void startMainActivity() {
-		startActivity(new Intent(this, MainActivity.class));
+		startActivity(new Intent(this, MainViewImpl.class));
 	}
 
 	@Override
