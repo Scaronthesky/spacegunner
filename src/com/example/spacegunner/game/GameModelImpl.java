@@ -14,11 +14,13 @@ public class GameModelImpl implements GameModel {
 
 	/**
 	 * The game model representation.
+	 * @param points 
+	 * @param level 
 	 */
-	public GameModelImpl() {
+	public GameModelImpl(final int level, final int points) {
 		super();
-		this.level = 0;
-		this.points = 0;
+		this.level = level;
+		this.points = points;
 		this.shipsDestroyed = 0;
 		this.shipsToDestroy = 0;
 		this.time = 0;
@@ -34,7 +36,7 @@ public class GameModelImpl implements GameModel {
 	}
 
 	/**
-	 * Countdown the time.
+	 * Count down the time.
 	 */
 	@Override
 	public void countdownTime() {

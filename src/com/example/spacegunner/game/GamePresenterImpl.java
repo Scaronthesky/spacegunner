@@ -19,17 +19,12 @@ public class GamePresenterImpl implements GamePresenter, Runnable {
 	private static final int TIME_BETWEEN_FRAMES = 50;
 	private static final float DIFFICULTY_MODIFIER = 1.5f;
 
-	public GamePresenterImpl(GameView view) {
+	public GamePresenterImpl(GameView view, int level, int points) {
 		super();
 		this.view = view;
-		this.model = new GameModelImpl();
+		this.model = new GameModelImpl(level, points);
 		this.handler = new Handler();
 		this.random = new Random();
-	}
-
-	@Override
-	public void startGame() {
-		Log.d(TAG, "startGame");
 		startNextLevel();
 	}
 
@@ -53,7 +48,7 @@ public class GamePresenterImpl implements GamePresenter, Runnable {
 		if (this.model.isGameOver()) {
 			endGame();
 		} else if (this.model.isLevelFinished()) {
-			startNextLevel();
+			endLevel();
 		} else {
 			handler.postDelayed(this, TIME_BETWEEN_FRAMES);
 		}
@@ -99,20 +94,20 @@ public class GamePresenterImpl implements GamePresenter, Runnable {
 	}
 
 	@Override
+	public void endLevel() {
+		this.view.startLevelView(this.model.getLevel(), this.model.getPoints());
+	}
+
+	@Override
 	public void endGame() {
 		Log.d(TAG, "Game over: " + this.model);
-		PlayerHighscore PlayerHighscore = this.view.getHighscore();
-		final int points = this.model.getPoints();
-		if (points > PlayerHighscore.getHighscore()) {
-			this.view.startHighscoreActivity(points);
-		} else {
-			this.view.startMainActivity();
-		}
+		this.view.startGameResultView(this.model.getPoints());
 	}
 
 	@Override
 	public void pauseGame() {
 		handler.removeCallbacks(this);
 	}
+
 
 }

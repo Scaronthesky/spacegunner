@@ -8,4 +8,5 @@ public class Constants {
 	public static final String HIGHSCORE = "highscore";
 	public static final String PLAYERNAME = "playername";
 	public static final String POINTS = "points";
+	public static final String LEVEL = "level";
 }

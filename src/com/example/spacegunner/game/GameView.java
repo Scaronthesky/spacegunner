@@ -36,8 +36,10 @@ public interface GameView {
 
 	public PlayerHighscore getHighscore();
 
-	public void startHighscoreActivity(int points);
+	public void startMainView();
 
-	public void startMainActivity();
+	public void startLevelView(int level, int points);
+
+	public void startGameResultView(int points);
 
 }

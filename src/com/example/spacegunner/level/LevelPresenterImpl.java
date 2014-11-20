@@ -1,22 +1,33 @@
 package com.example.spacegunner.level;
 
+import com.example.spacegunner.ioservice.PlayerHighscore;
+
 public class LevelPresenterImpl implements LevelPresenter {
 
 	private LevelView view;
+	private LevelModel model;
 
-	public LevelPresenterImpl(LevelView view) {
+	public LevelPresenterImpl(LevelView view, int level, int points) {
 		super();
 		this.view = view;
+		this.model = new LevelModelImpl(level, points);
+		this.view.displayLevelAndPoints(level, points);
 	}
 
 	@Override
 	public void continueGameButtonClicked() {
-		this.view.startGameActivity();
+		this.view.startGameView(model.getLevel(), model.getPoints());
 	}
 
 	@Override
 	public void quitGameButtonClicked() {
-		this.view.startMainActivity();
+		final PlayerHighscore playerHighscore = this.view.readHighscore();
+		final int currentPoints = this.model.getPoints();
+		if (currentPoints > playerHighscore.getHighscore()) {
+			this.view.startGameResultView(currentPoints);
+		} else {
+			this.view.startMainView();
+		}
 	}
 
 }

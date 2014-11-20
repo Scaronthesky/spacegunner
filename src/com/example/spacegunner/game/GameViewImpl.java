@@ -26,9 +26,10 @@ import android.widget.Toast;
 
 import com.example.spacegunner.R;
 import com.example.spacegunner.constants.Constants;
-import com.example.spacegunner.highscore.HighscoreViewImpl;
+import com.example.spacegunner.gameresult.GameResultViewImpl;
 import com.example.spacegunner.ioservice.IOService;
 import com.example.spacegunner.ioservice.PlayerHighscore;
+import com.example.spacegunner.level.LevelViewImpl;
 import com.example.spacegunner.main.MainViewImpl;
 
 @SuppressLint("RtlHardcoded")
@@ -50,7 +51,7 @@ public class GameViewImpl extends Activity implements OnClickListener, GameView 
 	@Override
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
-		Log.d(TAG, "onCreate");
+		Log.d(TAG, "Creating GameView");
 		setContentView(R.layout.game);
 		this.gameArea = (ViewGroup) findViewById(R.id.gamearea);
 		this.displayWidth = getResources().getDisplayMetrics().widthPixels;
@@ -58,14 +59,19 @@ public class GameViewImpl extends Activity implements OnClickListener, GameView 
 		this.mediaPlayer = MediaPlayer.create(this, R.raw.explosion);
 		this.frame = 0;
 		this.ioService = new IOService(this);
-		this.presenter = new GamePresenterImpl(this);
-		this.presenter.startGame();
+		final int defaultLevel = 0;
+		final int level = getIntent()
+				.getIntExtra(Constants.LEVEL, defaultLevel);
+		final int defaultPoints = 0;
+		final int points = getIntent().getIntExtra(Constants.POINTS,
+				defaultPoints);
+		this.presenter = new GamePresenterImpl(this, level, points);
 	}
 
 	@Override
 	public void showLevelStartInfo(int level) {
 		Toast.makeText(this, "Starting level: " + level, Toast.LENGTH_SHORT)
-		.show();
+				.show();
 	}
 
 	@Override
@@ -82,8 +88,7 @@ public class GameViewImpl extends Activity implements OnClickListener, GameView 
 	public void resetFrame() {
 		this.frame = 0;
 	}
-	
-	
+
 	@Override
 	public void setTime(final int time) {
 		final TextView tvTime = (TextView) findViewById(R.id.time);
@@ -223,7 +228,7 @@ public class GameViewImpl extends Activity implements OnClickListener, GameView 
 
 		@Override
 		public void onAnimationEnd(Animation animation) {
-				gameArea.removeView(destroyedShip);
+			gameArea.removeView(destroyedShip);
 		}
 
 		@Override
@@ -256,13 +261,21 @@ public class GameViewImpl extends Activity implements OnClickListener, GameView 
 	}
 
 	@Override
-	public void startMainActivity() {
+	public void startMainView() {
 		startActivity(new Intent(this, MainViewImpl.class));
 	}
 
 	@Override
-	public void startHighscoreActivity(final int points) {
-		Intent intent = new Intent(this, HighscoreViewImpl.class);
+	public void startLevelView(int level, int points) {
+		Intent intent = new Intent(this, LevelViewImpl.class);
+		intent.putExtra(Constants.LEVEL, level);
+		intent.putExtra(Constants.POINTS, points);
+		startActivity(intent);
+	}
+
+	@Override
+	public void startGameResultView(final int points) {
+		Intent intent = new Intent(this, GameResultViewImpl.class);
 		intent.putExtra(Constants.POINTS, points);
 		startActivity(intent);
 	}
@@ -278,7 +291,5 @@ public class GameViewImpl extends Activity implements OnClickListener, GameView 
 		mediaPlayer.release();
 		super.onDestroy();
 	}
-
-	
 
 }

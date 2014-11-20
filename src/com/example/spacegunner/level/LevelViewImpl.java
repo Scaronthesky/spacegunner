@@ -8,55 +8,85 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.spacegunner.R;
+import com.example.spacegunner.constants.Constants;
 import com.example.spacegunner.game.GameViewImpl;
+import com.example.spacegunner.gameresult.GameResultViewImpl;
 import com.example.spacegunner.ioservice.IOService;
+import com.example.spacegunner.ioservice.PlayerHighscore;
 import com.example.spacegunner.main.MainViewImpl;
 
 public class LevelViewImpl extends Activity implements LevelView,
 		OnClickListener {
 
 	private LevelPresenter presenter;
+	private IOService ioService;
 	private Button buttonContinueGame;
 	private Button buttonQuitGame;
-	private int highscore;
-	IOService ioService;
 
 	@Override
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
-		Log.d(TAG, "Creating HighscoreActivity");
-		// TODO: Create new layout
-		 setContentView(R.layout.highscore);
-		this.presenter = new LevelPresenterImpl(this);
-		// TODO: Replace with new ids
-		this.buttonContinueGame = (Button) findViewById(R.id.buttonsavename);
+		Log.d(TAG, "Creating LevelView");
+		setContentView(R.layout.level);
+		final int defaultLevel = 0;
+		final int level = getIntent()
+				.getIntExtra(Constants.LEVEL, defaultLevel);
+		final int defaultPoints = 0;
+		final int points = getIntent().getIntExtra(Constants.POINTS,
+				defaultPoints);
+		this.presenter = new LevelPresenterImpl(this, level, points);
+		this.ioService = new IOService(this);
+		this.buttonContinueGame = (Button) findViewById(R.id.buttoncontinuegame);
 		this.buttonContinueGame.setOnClickListener(this);
-		// TODO: Replace with new ids
-		this.buttonQuitGame = (Button) findViewById(R.id.buttonsavename);
+		this.buttonQuitGame = (Button) findViewById(R.id.buttonquitgame);
 		this.buttonQuitGame.setOnClickListener(this);
 	}
 
 	@Override
+	public void displayLevelAndPoints(int level, int points) {
+		TextView levelText = (TextView) findViewById(R.id.labellevel);
+		levelText.setText(getResources().getString(
+				R.string.current_level) + level);
+		TextView levelPoints = (TextView) findViewById(R.id.labelpoints);
+		levelPoints.setText(getResources().getString(
+				R.string.current_points) + points);
+	}
+
+	@Override
 	public void onClick(View button) {
-		// TODO: Replace with new ids
-		if (button.getId() == R.id.buttonsavename) {
+		if (button.getId() == R.id.buttoncontinuegame) {
 			this.presenter.continueGameButtonClicked();
-			// TODO: Replace with new ids
-		} else if (button.getId() == R.id.buttonsavename) {
+		} else if (button.getId() == R.id.buttonquitgame) {
 			this.presenter.quitGameButtonClicked();
 		}
 	}
 
 	@Override
-	public void startMainActivity() {
-		startActivity(new Intent(this, MainViewImpl.class));
+	public PlayerHighscore readHighscore() {
+		return this.ioService.readHighscore();
 	}
 
 	@Override
-	public void startGameActivity() {
-		startActivity(new Intent(this, GameViewImpl.class));
+	public void startGameView(final int level, final int points) {
+		Intent intent = new Intent(this, GameViewImpl.class);
+		intent.putExtra(Constants.LEVEL, level);
+		intent.putExtra(Constants.POINTS, points);
+		startActivity(intent);
+	}
+
+	@Override
+	public void startGameResultView(int points) {
+		Intent intent = new Intent(this, GameResultViewImpl.class);
+		intent.putExtra(Constants.POINTS, points);
+		startActivity(intent);
+	}
+
+	@Override
+	public void startMainView() {
+		startActivity(new Intent(this, MainViewImpl.class));
 	}
 
 }

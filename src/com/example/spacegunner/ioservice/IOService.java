@@ -3,11 +3,11 @@ package com.example.spacegunner.ioservice;
 import static com.example.spacegunner.constants.Constants.GAME;
 import static com.example.spacegunner.constants.Constants.HIGHSCORE;
 import static com.example.spacegunner.constants.Constants.PLAYERNAME;
-import android.R;
+
+import com.example.spacegunner.R;
+
 import android.app.Activity;
 import android.content.SharedPreferences;
-
-import com.example.spacegunner.main.MainViewImpl;
 
 public class IOService {
 
@@ -17,11 +17,11 @@ public class IOService {
 	public IOService(final Activity activity) {
 		this.activity = activity;
 		this.sharedPreferences = this.activity.getSharedPreferences(GAME,
-				MainViewImpl.MODE_PRIVATE);
+				Activity.MODE_PRIVATE);
 	}
 
 	public PlayerHighscore readHighscore() {
-		final String defaultString = activity.getString(com.example.spacegunner.R.string.no_highscore);
+		final String defaultString = this.activity.getResources().getString(R.string.no_highscore);
 		final String playerName = sharedPreferences.getString(PLAYERNAME,
 				defaultString);
 		final int defaultScore = 0;
