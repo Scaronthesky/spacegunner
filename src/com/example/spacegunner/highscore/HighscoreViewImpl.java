@@ -10,13 +10,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.spacegunner.R;
 import com.example.spacegunner.ioservice.IOService;
+import com.example.spacegunner.ioservice.PlayerHighscore;
 import com.example.spacegunner.main.MainActivity;
 
-public class HighscoreActivity extends Activity implements OnClickListener {
+public class HighscoreViewImpl extends Activity implements HighscoreView,
+		OnClickListener {
 
+	private HighscorePresenter presenter;
 	private Button buttonSaveName;
 	private int highscore;
 	IOService ioService;
@@ -26,12 +30,10 @@ public class HighscoreActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstance);
 		Log.d(TAG, "Creating HighscoreActivity");
 		setContentView(R.layout.highscore);
-		this.ioService  = new IOService(this);
+		this.presenter = new HighscorePresenterImpl(this);
+		this.ioService = new IOService(this);
 		final int defaultScore = 0;
 		this.highscore = getIntent().getIntExtra(POINTS, defaultScore);
-		if (this.highscore == defaultScore) {
-			throw new IllegalStateException("New highscore passed to this activity is 0.");
-		}
 		this.buttonSaveName = (Button) findViewById(R.id.buttonsavename);
 		this.buttonSaveName.setOnClickListener(this);
 	}
@@ -40,8 +42,26 @@ public class HighscoreActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		final TextView textViewName = (TextView) findViewById(R.id.textname);
 		final String playerName = textViewName.getText().toString().trim();
-		this.ioService.saveHighscore(playerName, this.highscore);
-		startActivity(new Intent(this,MainActivity.class));
+		final PlayerHighscore playerHighscore = new PlayerHighscore(playerName,
+				this.highscore);
+		this.presenter.saveHighscoreButtonClicked(playerHighscore);
+	}
+
+	@Override
+	public void saveHighscore(final PlayerHighscore playerHighscore) {
+		this.ioService.saveHighscore(playerHighscore);
+	}
+
+	@Override
+	public void showHighscoreSavedToast() {
+		Toast.makeText(this,
+				getResources().getString(R.string.highscore_saved),
+				Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void startMainActivity() {
+		startActivity(new Intent(this, MainActivity.class));
 	}
 
 }

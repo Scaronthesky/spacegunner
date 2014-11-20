@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 import com.example.spacegunner.R;
 import com.example.spacegunner.constants.Constants;
-import com.example.spacegunner.highscore.HighscoreActivity;
+import com.example.spacegunner.highscore.HighscoreViewImpl;
 import com.example.spacegunner.ioservice.IOService;
 import com.example.spacegunner.ioservice.PlayerHighscore;
 import com.example.spacegunner.main.MainActivity;
@@ -262,7 +262,7 @@ public class GameViewImpl extends Activity implements OnClickListener, GameView 
 
 	@Override
 	public void startHighscoreActivity(final int points) {
-		Intent intent = new Intent(this, HighscoreActivity.class);
+		Intent intent = new Intent(this, HighscoreViewImpl.class);
 		intent.putExtra(Constants.POINTS, points);
 		startActivity(intent);
 	}

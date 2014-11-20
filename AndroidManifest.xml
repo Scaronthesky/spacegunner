@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.example.spacegunner.game.GameViewImpl" android:screenOrientation="landscape"></activity>
-        <activity android:name="com.example.spacegunner.highscore.HighscoreActivity" android:screenOrientation="landscape"></activity>
+        <activity android:name="com.example.spacegunner.highscore.HighscoreViewImpl" android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>

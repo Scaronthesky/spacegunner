@@ -29,10 +29,10 @@ public class IOService {
 		return new PlayerHighscore(playerName, highscore);
 	}
 
-	public void saveHighscore(final String playerName, final int highscore) {
+	public void saveHighscore(PlayerHighscore playerHighscore) {
 		final SharedPreferences.Editor editor = this.sharedPreferences.edit();
-		editor.putString(PLAYERNAME, playerName);
-		editor.putInt(HIGHSCORE, highscore);
+		editor.putString(PLAYERNAME, playerHighscore.getPlayerName());
+		editor.putInt(HIGHSCORE, playerHighscore.getHighscore());
 		editor.commit();
 	}
 
