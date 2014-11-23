@@ -19,12 +19,13 @@ public class GameResultPresenterImpl implements GameResultPresenter {
 		final int currentPoints = this.model.getPoints();
 		if (currentPoints < playerHighscore.getHighscore()) {
 			this.view.hideSaveHighscoreLayout();
-		} 
+		}
 	}
 
 	@Override
 	public void saveHighscoreButtonClicked(final String playerName) {
-		PlayerHighscore playerHighscore = new PlayerHighscore(playerName, this.model.getPoints());
+		PlayerHighscore playerHighscore = new PlayerHighscore(playerName,
+				this.model.getPoints());
 		this.view.saveHighscore(playerHighscore);
 		this.view.showHighscoreSavedToast();
 		this.view.startMainView();
@@ -32,6 +33,11 @@ public class GameResultPresenterImpl implements GameResultPresenter {
 
 	@Override
 	public void buttonReturnMainViewClicked() {
+		this.view.startMainView();
+	}
+
+	@Override
+	public void backButtonPressed() {
 		this.view.startMainView();
 	}
 

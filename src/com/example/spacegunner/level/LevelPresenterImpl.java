@@ -30,4 +30,9 @@ public class LevelPresenterImpl implements LevelPresenter {
 		}
 	}
 
+	@Override
+	public void backButtonPressed() {
+		this.view.startMainView();
+	}
+
 }

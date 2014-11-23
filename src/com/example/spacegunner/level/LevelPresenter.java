@@ -6,4 +6,6 @@ public interface LevelPresenter {
 
 	public void quitGameButtonClicked();
 
+	public void backButtonPressed();
+
 }

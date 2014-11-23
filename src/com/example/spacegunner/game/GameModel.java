@@ -43,6 +43,12 @@ public interface GameModel {
 	public int getPoints();
 
 	/**
+	 * @return the points the player had when the level started. Used when the
+	 *         game is paused to return to the previous LevelView.
+	 */
+	public int getPointsAtLevelStart();
+
+	/**
 	 * @return the shipsToDisplay
 	 */
 	public int getShipsToDestroy();
@@ -71,7 +77,5 @@ public interface GameModel {
 	 * @return the toString() method.
 	 */
 	public String toString();
-
-	
 
 }

@@ -274,6 +274,13 @@ public class GameViewImpl extends Activity implements OnClickListener, GameView 
 	}
 
 	@Override
+	public void returnToPreviousLevelView(int previousLevel,
+			int pointsAtLevelStart) {
+		startLevelView(previousLevel, pointsAtLevelStart);
+
+	}
+
+	@Override
 	public void startGameResultView(final int points) {
 		Intent intent = new Intent(this, GameResultViewImpl.class);
 		intent.putExtra(Constants.POINTS, points);
@@ -281,9 +288,14 @@ public class GameViewImpl extends Activity implements OnClickListener, GameView 
 	}
 
 	@Override
+	public void onBackPressed() {
+		this.presenter.backButtonPressed();
+	}
+
+	@Override
 	protected void onPause() {
 		super.onPause();
-		this.presenter.pauseGame();
+		this.presenter.backButtonPressed();
 	}
 
 	@Override

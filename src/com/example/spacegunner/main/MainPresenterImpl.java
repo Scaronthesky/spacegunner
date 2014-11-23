@@ -14,4 +14,9 @@ public class MainPresenterImpl implements MainPresenter {
 		this.view.startGameActivity();
 	}
 
+	@Override
+	public void backButtonPressed() {
+		// no-op
+	}
+
 }

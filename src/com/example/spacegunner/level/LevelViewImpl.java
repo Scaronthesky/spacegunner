@@ -89,4 +89,8 @@ public class LevelViewImpl extends Activity implements LevelView,
 		startActivity(new Intent(this, MainViewImpl.class));
 	}
 
+	@Override
+	public void onBackPressed() {
+		this.presenter.backButtonPressed();
+	}
 }

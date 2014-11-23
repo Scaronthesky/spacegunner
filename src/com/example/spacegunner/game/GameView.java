@@ -40,6 +40,8 @@ public interface GameView {
 
 	public void startLevelView(int level, int points);
 
-	public void startGameResultView(int points);
+	public void returnToPreviousLevelView(int previousLevel, int pointsAtLevelStart);
 
+	public void startGameResultView(int points);
+	
 }

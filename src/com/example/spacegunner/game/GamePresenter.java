@@ -10,7 +10,7 @@ public interface GamePresenter {
 
 	public void refreshScreen();
 
-	public void pauseGame();
+	public void backButtonPressed();
 
 	public void endLevel();
 

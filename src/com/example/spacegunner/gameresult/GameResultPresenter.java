@@ -7,4 +7,6 @@ public interface GameResultPresenter {
 
 	public void buttonReturnMainViewClicked();
 
+	public void backButtonPressed();
+
 }

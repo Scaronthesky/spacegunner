@@ -43,7 +43,8 @@ public class MainViewImpl extends Activity implements OnClickListener, MainView 
 	private void displayHighscore() {
 		TextView highscorelist = (TextView) findViewById(R.id.highscorelist);
 		PlayerHighscore playerHighscore = iOService.readHighscore();
-		highscorelist.setText(playerHighscore.getPlayerName() + ": " + playerHighscore.getHighscore());
+		highscorelist.setText(playerHighscore.getPlayerName() + ": "
+				+ playerHighscore.getHighscore());
 	}
 
 	@Override
@@ -54,6 +55,11 @@ public class MainViewImpl extends Activity implements OnClickListener, MainView 
 	@Override
 	public void startGameActivity() {
 		startActivity(new Intent(this, GameViewImpl.class));
+	}
+
+	@Override
+	public void onBackPressed() {
+		this.presenter.backButtonPressed();
 	}
 
 }

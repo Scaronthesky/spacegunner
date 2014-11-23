@@ -4,4 +4,6 @@ public interface MainPresenter {
 
 	public void startGameButtonClicked();
 
+	public void backButtonPressed();
+
 }

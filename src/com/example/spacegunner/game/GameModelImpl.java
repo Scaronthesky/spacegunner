@@ -8,19 +8,22 @@ public class GameModelImpl implements GameModel {
 	private static final int MAXIMUM_TIME_SHOWN = 2000;
 	private int level;
 	private int points;
+	private final int pointsAtLevelStart;
 	private int shipsToDestroy;
 	private int shipsDestroyed;
 	private int time;
 
 	/**
 	 * The game model representation.
-	 * @param points 
-	 * @param level 
+	 * 
+	 * @param points
+	 * @param level
 	 */
 	public GameModelImpl(final int level, final int points) {
 		super();
 		this.level = level;
 		this.points = points;
+		this.pointsAtLevelStart = points;
 		this.shipsDestroyed = 0;
 		this.shipsToDestroy = 0;
 		this.time = 0;
@@ -78,6 +81,11 @@ public class GameModelImpl implements GameModel {
 		return level;
 	}
 
+	@Override
+	public int getPointsAtLevelStart() {
+		return pointsAtLevelStart;
+	}
+
 	/**
 	 * @return the points
 	 */
@@ -131,7 +139,5 @@ public class GameModelImpl implements GameModel {
 				+ ", shipsDestroyed=" + shipsDestroyed + ", shipsToDestroy="
 				+ shipsToDestroy + ", time=" + time + "]";
 	}
-
-
 
 }

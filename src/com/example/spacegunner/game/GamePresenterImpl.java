@@ -7,8 +7,6 @@ import java.util.Random;
 import android.os.Handler;
 import android.util.Log;
 
-import com.example.spacegunner.ioservice.PlayerHighscore;
-
 public class GamePresenterImpl implements GamePresenter, Runnable {
 
 	private GameModel model;
@@ -59,8 +57,8 @@ public class GamePresenterImpl implements GamePresenter, Runnable {
 		this.model.countdownTime();
 		final float randomValue = this.random.nextFloat();
 		// display 50 per cent more ships than necessary
-		final double probability = this.model.getShipsToDestroy() * DIFFICULTY_MODIFIER
-				/ this.model.getSecondsPerLevel();
+		final double probability = this.model.getShipsToDestroy()
+				* DIFFICULTY_MODIFIER / this.model.getSecondsPerLevel();
 		// if the probability is above 1, two ships might have to be displayed
 		if (probability > 1) {
 			this.view.displayShip();
@@ -82,7 +80,8 @@ public class GamePresenterImpl implements GamePresenter, Runnable {
 		this.view.setTime(this.model.getTime());
 		this.view.setHitBarWidth(this.model.getShipsDestroyed(),
 				this.model.getShipsToDestroy());
-		this.view.setTimeBarWidth(this.model.getTime(), this.model.getSecondsPerLevel());
+		this.view.setTimeBarWidth(this.model.getTime(),
+				this.model.getSecondsPerLevel());
 	}
 
 	@Override
@@ -95,7 +94,22 @@ public class GamePresenterImpl implements GamePresenter, Runnable {
 
 	@Override
 	public void endLevel() {
+		handler.removeCallbacks(this);
 		this.view.startLevelView(this.model.getLevel(), this.model.getPoints());
+	}
+
+	@Override
+	public void backButtonPressed() {
+		handler.removeCallbacks(this);
+		if (!model.isLevelFinished()) {
+			final int currentLevel = this.model.getLevel();
+			if (currentLevel == 1) {
+				this.view.startGameResultView(this.model.getPoints());
+			} else {
+				this.view.returnToPreviousLevelView(this.model.getLevel() - 1,
+						this.model.getPointsAtLevelStart());
+			}
+		}
 	}
 
 	@Override
@@ -103,11 +117,5 @@ public class GamePresenterImpl implements GamePresenter, Runnable {
 		Log.d(TAG, "Game over: " + this.model);
 		this.view.startGameResultView(this.model.getPoints());
 	}
-
-	@Override
-	public void pauseGame() {
-		handler.removeCallbacks(this);
-	}
-
 
 }

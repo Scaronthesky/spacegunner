@@ -4,7 +4,6 @@ import static com.example.spacegunner.constants.Constants.POINTS;
 import static com.example.spacegunner.constants.Constants.TAG;
 import android.app.Activity;
 import android.content.Intent;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -38,7 +37,7 @@ public class GameResultViewImpl extends Activity implements GameResultView,
 		this.presenter = new GameResultPresenterImpl(this, highscore);
 		this.buttonSaveHighscore = (Button) findViewById(R.id.buttonsavehighscore);
 		this.buttonSaveHighscore.setOnClickListener(this);
-		this.buttonReturnMainView= (Button) findViewById(R.id.buttonreturnmain);
+		this.buttonReturnMainView = (Button) findViewById(R.id.buttonreturnmain);
 		this.buttonReturnMainView.setOnClickListener(this);
 	}
 
@@ -57,7 +56,7 @@ public class GameResultViewImpl extends Activity implements GameResultView,
 		} else if (button.getId() == R.id.buttonreturnmain) {
 			this.presenter.buttonReturnMainViewClicked();
 		}
-		
+
 	}
 
 	@Override
@@ -82,6 +81,9 @@ public class GameResultViewImpl extends Activity implements GameResultView,
 		startActivity(new Intent(this, MainViewImpl.class));
 	}
 
-
+	@Override
+	public void onBackPressed() {
+		this.presenter.backButtonPressed();
+	}
 
 }

@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="16"
         android:targetSdkVersion="21" />
 
     <application
@@ -22,9 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.spacegunner.game.GameViewImpl" android:screenOrientation="landscape"></activity>
-        <activity android:name="com.example.spacegunner.gameresult.GameResultViewImpl" android:screenOrientation="landscape"></activity>
-        <activity android:name="com.example.spacegunner.level.LevelViewImpl" android:screenOrientation="landscape"></activity>
+        <activity android:name="com.example.spacegunner.game.GameViewImpl" android:screenOrientation="landscape" android:parentActivityName="com.example.spacegunner.level.LevelViewImpl"></activity>
+        <activity android:name="com.example.spacegunner.gameresult.GameResultViewImpl" android:screenOrientation="landscape" android:parentActivityName="com.example.spacegunner.main.MainViewImpl"></activity>
+        <activity android:name="com.example.spacegunner.level.LevelViewImpl" android:screenOrientation="landscape" android:parentActivityName="com.example.spacegunner.main.MainViewImpl"></activity>
     </application>
 
 </manifest>
