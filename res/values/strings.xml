@@ -21,4 +21,6 @@
     <string name="current_level">Current level: </string>
     <string name="current_points">Current points: </string>
     <string name="returnmainscreen">Return to main screen</string>
+<!--     Image credits  -->
+    <string name="credits">Photographies by NASA/Hubble Space Telescope</string>
 </resources>

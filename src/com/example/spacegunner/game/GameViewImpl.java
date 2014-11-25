@@ -8,6 +8,7 @@ import java.util.Random;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,6 +22,7 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +47,7 @@ public class GameViewImpl extends Activity implements OnClickListener, GameView 
 	private ImageView destroyedShip;
 	private IOService ioService;
 	private static final String SPACESHIP_IMAGE = "spaceship_";
+	private static final String BACKGROUND_IMAGE = "background_";
 	private static final String CARDINAL_DIRECTIONS[][] = {
 			{ "nw", "n", "ne" }, { "w", "", "e" }, { "sw", "s", "se" } };
 
@@ -66,6 +69,25 @@ public class GameViewImpl extends Activity implements OnClickListener, GameView 
 		final int points = getIntent().getIntExtra(Constants.POINTS,
 				defaultPoints);
 		this.presenter = new GamePresenterImpl(this, level, points);
+	}
+
+	@Override
+	public void setBackgroundImage(int level) {
+		final LinearLayout backgroundLayout = (LinearLayout) findViewById(R.id.background);
+		final Drawable backgroundImage;
+		if (level <= 0) {
+			throw new IllegalArgumentException(
+					"Background image cannot be set for level <= 0.");
+		} else if (level > 10) {
+			backgroundImage = getResources()
+					.getDrawable(R.drawable.background);
+		} else {
+			backgroundImage = getResources().getDrawable(
+					getResources().getIdentifier(
+							BACKGROUND_IMAGE + Integer.toString(level),
+							"drawable", this.getPackageName()));
+		}
+		backgroundLayout.setBackground(backgroundImage);
 	}
 
 	@Override
@@ -137,9 +159,9 @@ public class GameViewImpl extends Activity implements OnClickListener, GameView 
 		final int gameAreaWidth = this.gameArea.getWidth();
 		final int gameAreaHeight = this.gameArea.getHeight();
 		final int shipWidth = (int) Math.round(getResources().getDrawable(
-				R.drawable.spaceship).getMinimumWidth());
+				R.drawable.spaceship_n).getMinimumWidth());
 		final int shipHeight = (int) Math.round(getResources().getDrawable(
-				R.drawable.spaceship).getMinimumHeight());
+				R.drawable.spaceship_n).getMinimumHeight());
 		final int shipXPos = random.nextInt(gameAreaWidth - shipWidth);
 		final int shipYPos = random.nextInt(gameAreaHeight - shipHeight);
 		int vektorX, vektorY;

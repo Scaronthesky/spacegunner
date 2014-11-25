@@ -12,31 +12,75 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.spacegunner.main.MainViewImpl" >
 
-    <TextView
-        android:id="@+id/header"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/game_title"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="72sp" />
+        android:layout_weight="9"
+        android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/buttonsavehighscore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/start_game" />
+        <TextView
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_weight="0"
+            android:text="@string/game_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="72sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/buttonstartgame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:text="@string/start_game" />
+
+            <TextView
+                android:id="@+id/highscorelabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:text="@string/highscore"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/highscorelist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:text="@string/no_highscore" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    
 
     <TextView
-        android:id="@+id/highscorelabel"
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/highscore"
-        android:textSize="24sp" />
-
-    <TextView
-        android:id="@+id/highscorelist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/no_highscore" />
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:text="@string/credits"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </LinearLayout>

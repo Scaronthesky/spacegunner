@@ -35,7 +35,7 @@ public class GameResultViewImpl extends Activity implements GameResultView,
 		final int defaultScore = 0;
 		final int highscore = getIntent().getIntExtra(POINTS, defaultScore);
 		this.presenter = new GameResultPresenterImpl(this, highscore);
-		this.buttonSaveHighscore = (Button) findViewById(R.id.buttonsavehighscore);
+		this.buttonSaveHighscore = (Button) findViewById(R.id.buttonstartgame);
 		this.buttonSaveHighscore.setOnClickListener(this);
 		this.buttonReturnMainView = (Button) findViewById(R.id.buttonreturnmain);
 		this.buttonReturnMainView.setOnClickListener(this);
@@ -49,7 +49,7 @@ public class GameResultViewImpl extends Activity implements GameResultView,
 
 	@Override
 	public void onClick(View button) {
-		if (button.getId() == R.id.buttonsavehighscore) {
+		if (button.getId() == R.id.buttonstartgame) {
 			final TextView textViewName = (TextView) findViewById(R.id.textname);
 			final String playerName = textViewName.getText().toString().trim();
 			this.presenter.saveHighscoreButtonClicked(playerName);

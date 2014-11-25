@@ -4,6 +4,8 @@ import com.example.spacegunner.ioservice.PlayerHighscore;
 
 public interface GameView {
 
+	public void setBackgroundImage(int level);
+	
 	public void showLevelStartInfo(int level);
 
 	public void increaseFrame();

@@ -28,7 +28,7 @@ public class MainViewImpl extends Activity implements OnClickListener, MainView 
 		this.presenter = new MainPresenterImpl(this);
 		this.iOService = new IOService(this);
 		this.fadeIn = AnimationUtils.loadAnimation(this, R.anim.fadein);
-		final Button button = (Button) findViewById(R.id.buttonsavehighscore);
+		final Button button = (Button) findViewById(R.id.buttonstartgame);
 		button.setOnClickListener(this);
 	}
 

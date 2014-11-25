@@ -29,8 +29,9 @@ public class GamePresenterImpl implements GamePresenter, Runnable {
 	@Override
 	public void startNextLevel() {
 		this.model.startNextLevel();
+		this.view.setBackgroundImage(this.model.getLevel());
 		Log.d(TAG, "Started level: " + model);
-		this.view.showLevelStartInfo(model.getLevel());
+		this.view.showLevelStartInfo(this.model.getLevel());
 		refreshScreen();
 		this.handler.postDelayed(this, TIME_BETWEEN_FRAMES);
 	}
