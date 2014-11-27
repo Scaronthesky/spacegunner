@@ -317,7 +317,7 @@ public class GameViewImpl extends Activity implements OnClickListener, GameView 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		this.presenter.backButtonPressed();
+		this.presenter.gamePaused();
 	}
 
 	@Override

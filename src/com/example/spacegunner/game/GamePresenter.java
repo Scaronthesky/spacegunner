@@ -18,4 +18,6 @@ public interface GamePresenter {
 
 	public void shipDestroyed();
 
+	public void gamePaused();
+
 }

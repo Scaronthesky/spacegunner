@@ -101,15 +101,13 @@ public class GamePresenterImpl implements GamePresenter, Runnable {
 
 	@Override
 	public void backButtonPressed() {
-		handler.removeCallbacks(this);
-		if (!model.isLevelFinished()) {
-			final int currentLevel = this.model.getLevel();
-			if (currentLevel == 1) {
-				this.view.startGameResultView(this.model.getPoints());
-			} else {
-				this.view.returnToPreviousLevelView(this.model.getLevel() - 1,
-						this.model.getPointsAtLevelStart());
-			}
+		returnToPreviousScreen();
+	}
+
+	@Override
+	public void gamePaused() {
+		if(!model.isLevelFinished()) {
+			returnToPreviousScreen();
 		}
 	}
 
@@ -119,4 +117,14 @@ public class GamePresenterImpl implements GamePresenter, Runnable {
 		this.view.startGameResultView(this.model.getPoints());
 	}
 
+	private void returnToPreviousScreen() {
+		handler.removeCallbacks(this);
+		final int currentLevel = this.model.getLevel();
+		if (currentLevel == 1) {
+			this.view.startMainView();
+		} else {
+			this.view.returnToPreviousLevelView(currentLevel - 1,
+					this.model.getPointsAtLevelStart());
+		}
+	}
 }
