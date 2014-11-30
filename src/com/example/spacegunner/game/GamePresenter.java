@@ -12,9 +12,9 @@ public interface GamePresenter {
 
 	public void backButtonPressed();
 
-	public void endLevel();
+	public void levelFinished();
 
-	public void endGame();
+	public void gameOver();
 
 	public void shipDestroyed();
 

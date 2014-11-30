@@ -22,5 +22,16 @@
     <string name="current_points">Current points: </string>
     <string name="returnmainscreen">Return to main screen</string>
 <!--     Image credits  -->
-    <string name="credits">Photographies by NASA/Hubble Space Telescope</string>
+    <string name="background">Image credits: NASA, ESA, and the Hubble Heritage Team (STScI/AURA)</string>
+    <string name="image_credits">Image credits: </string>
+    <string name="background_1">NASA, ESA, CXC and the University of Potsdam, JPL-Caltech, and STScI</string>
+    <string name="background_2">NASA, ESA, and The Hubble Heritage Team (STScI/AURA)</string>
+    <string name="background_3">NASA, ESA, N. Smith (UC, Berkeley), and The Hubble Heritage Team (STScI/AURA)</string>
+    <string name="background_4">NASA, ESA, and the Hubble Heritage (STScI/AURA)-ESA/Hubble Collaboration</string>
+    <string name="background_5">NASA, ESA, the Hubble Heritage Team (STScI/AURA), and R. Gendler</string>
+    <string name="background_6">NASA,ESA, M. Robberto (STScI/ESA) and the Hubble Space Telescope Orion Treasury Project Team</string>
+    <string name="background_7">NASA, ESA, J. Merten (ITA, Heidelberg/AO Bologna), and D. Coe (STScI)</string>
+    <string name="background_8">NASA, ESA, SSC, CXC, and STScI</string>
+    <string name="background_9">NASA, ESA, T. Megeath (University of Toledo) and M. Robberto (STScI)</string>
+    <string name="background_10">NASA, ESA, S. Beckwith (STScI), and The Hubble Heritage Team (STScI/AURA)</string>
 </resources>

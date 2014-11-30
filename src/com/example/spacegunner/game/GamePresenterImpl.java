@@ -29,7 +29,7 @@ public class GamePresenterImpl implements GamePresenter, Runnable {
 	@Override
 	public void startNextLevel() {
 		this.model.startNextLevel();
-		this.view.setBackgroundImage(this.model.getLevel());
+		this.view.setBackgroundImageAndCredits(this.model.getLevel());
 		Log.d(TAG, "Started level: " + model);
 		this.view.showLevelStartInfo(this.model.getLevel());
 		refreshScreen();
@@ -45,9 +45,9 @@ public class GamePresenterImpl implements GamePresenter, Runnable {
 			this.view.resetFrame();
 		}
 		if (this.model.isGameOver()) {
-			endGame();
+			gameOver();
 		} else if (this.model.isLevelFinished()) {
-			endLevel();
+			levelFinished();
 		} else {
 			handler.postDelayed(this, TIME_BETWEEN_FRAMES);
 		}
@@ -94,7 +94,7 @@ public class GamePresenterImpl implements GamePresenter, Runnable {
 	}
 
 	@Override
-	public void endLevel() {
+	public void levelFinished() {
 		handler.removeCallbacks(this);
 		this.view.startLevelView(this.model.getLevel(), this.model.getPoints());
 	}
@@ -106,13 +106,11 @@ public class GamePresenterImpl implements GamePresenter, Runnable {
 
 	@Override
 	public void gamePaused() {
-		if(!model.isLevelFinished()) {
-			returnToPreviousScreen();
-		}
+		handler.removeCallbacks(this);
 	}
 
 	@Override
-	public void endGame() {
+	public void gameOver() {
 		Log.d(TAG, "Game over: " + this.model);
 		this.view.startGameResultView(this.model.getPoints());
 	}
@@ -120,7 +118,7 @@ public class GamePresenterImpl implements GamePresenter, Runnable {
 	private void returnToPreviousScreen() {
 		handler.removeCallbacks(this);
 		final int currentLevel = this.model.getLevel();
-		if (currentLevel == 1) {
+		if (currentLevel == this.model.getFirstLevel()) {
 			this.view.startMainView();
 		} else {
 			this.view.returnToPreviousLevelView(currentLevel - 1,

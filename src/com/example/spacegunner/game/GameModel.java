@@ -74,8 +74,15 @@ public interface GameModel {
 	public int getMaximumTimeShown();
 
 	/**
+	 * @return the number of the first level
+	 */
+	public int getFirstLevel();
+
+	/**
 	 * @return the toString() method.
 	 */
 	public String toString();
+
+	
 
 }

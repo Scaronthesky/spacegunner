@@ -2,6 +2,7 @@ package com.example.spacegunner.game;
 
 public class GameModelImpl implements GameModel {
 
+	private static final int FIRST_LEVEL = 1;
 	private static final int INCREASE_POINTS_BY = 100;
 	private static final int SHIP_MULTIPLIER = 10;
 	private static final int SECONDS_PER_LEVEL = 60;
@@ -128,6 +129,11 @@ public class GameModelImpl implements GameModel {
 		return MAXIMUM_TIME_SHOWN;
 	}
 
+	@Override
+	public int getFirstLevel() {
+		return FIRST_LEVEL;
+	}
+	
 	@Override
 	public int getSpeedModifier() {
 		return this.level;

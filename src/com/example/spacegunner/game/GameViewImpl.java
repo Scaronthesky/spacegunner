@@ -72,22 +72,30 @@ public class GameViewImpl extends Activity implements OnClickListener, GameView 
 	}
 
 	@Override
-	public void setBackgroundImage(int level) {
+	public void setBackgroundImageAndCredits(int level) {
 		final LinearLayout backgroundLayout = (LinearLayout) findViewById(R.id.background);
 		final Drawable backgroundImage;
+		final TextView textCredit = (TextView) findViewById(R.id.text_credits);
+		String credits = getResources().getString(R.string.image_credits);
 		if (level <= 0) {
 			throw new IllegalArgumentException(
 					"Background image cannot be set for level <= 0.");
 		} else if (level > 10) {
-			backgroundImage = getResources()
-					.getDrawable(R.drawable.background);
+			backgroundImage = getResources().getDrawable(R.drawable.background);
+			credits += getResources().getString(R.string.background_1);
+
 		} else {
+			final String identifier = BACKGROUND_IMAGE
+					+ Integer.toString(level);
 			backgroundImage = getResources().getDrawable(
-					getResources().getIdentifier(
-							BACKGROUND_IMAGE + Integer.toString(level),
-							"drawable", this.getPackageName()));
+					getResources().getIdentifier(identifier, "drawable",
+							this.getPackageName()));
+			credits += getResources().getString(
+					getResources().getIdentifier(identifier, "string",
+							this.getPackageName()));
 		}
 		backgroundLayout.setBackground(backgroundImage);
+		textCredit.setText(credits);
 	}
 
 	@Override
@@ -325,5 +333,6 @@ public class GameViewImpl extends Activity implements OnClickListener, GameView 
 		mediaPlayer.release();
 		super.onDestroy();
 	}
+	
 
 }
