@@ -29,7 +29,7 @@ public class GameResultViewImpl extends Activity implements GameResultView,
 	@Override
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
-		Log.d(TAG, "Creating HighscoreView");
+		Log.d(TAG, "Creating GameResultView");
 		setContentView(R.layout.gameresult);
 		this.ioService = new IOService(this);
 		final int defaultScore = 0;

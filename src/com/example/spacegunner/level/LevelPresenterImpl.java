@@ -21,13 +21,8 @@ public class LevelPresenterImpl implements LevelPresenter {
 
 	@Override
 	public void quitGameButtonClicked() {
-		final PlayerHighscore playerHighscore = this.view.readHighscore();
 		final int currentPoints = this.model.getPoints();
-		if (currentPoints > playerHighscore.getHighscore()) {
-			this.view.startGameResultView(currentPoints);
-		} else {
-			this.view.startMainView();
-		}
+		this.view.startGameResultView(currentPoints);
 	}
 
 	@Override
