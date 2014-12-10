@@ -14,7 +14,7 @@
         android:text="@string/game_over"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/red"
-        android:textSize="36sp" />
+        android:textSize="48sp" />
 
     <LinearLayout
         android:id="@+id/layoutHighscore"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:text="@string/enter_name"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="24sp" />
 
         <EditText
             android:id="@+id/textname"
@@ -53,7 +53,8 @@
             android:id="@+id/buttonstartgame"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/save" />
+            android:text="@string/save"
+            android:textSize="24sp" />
 
     </LinearLayout>
 
@@ -61,8 +62,7 @@
         android:id="@+id/buttonreturnmain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/returnmainscreen" />
-    
-    
+        android:text="@string/returnmainscreen"
+        android:textSize="24sp" />
 
 </LinearLayout>

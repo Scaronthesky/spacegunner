@@ -22,6 +22,7 @@
             android:layout_gravity="right"
             android:text="Large Text"
             android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
         <TextView
@@ -31,6 +32,7 @@
             android:layout_gravity="left"
             android:text="Large Text"
             android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
     </FrameLayout>
@@ -67,7 +69,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:text="TextView"
-                android:textColor="@color/green" />
+                android:textColor="@color/green"
+                android:textSize="16sp" />
 
         </FrameLayout>
 
@@ -89,7 +92,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:text="TextView"
-                android:textColor="@color/red" />
+                android:textColor="@color/red"
+                android:textSize="16sp" />
 
         </FrameLayout>
 

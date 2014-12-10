@@ -40,7 +40,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:text="@string/start_game" />
+                android:text="@string/start_game"
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/highscorelabel"
@@ -48,14 +49,16 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:text="@string/highscore"
-                android:textSize="24sp" />
+                android:textSize="36sp" />
 
             <TextView
                 android:id="@+id/highscorelist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:text="@string/no_highscore" />
+                android:text="@string/no_highscore"
+                android:textSize="24sp" />
+
         </LinearLayout>
 
         <Space
