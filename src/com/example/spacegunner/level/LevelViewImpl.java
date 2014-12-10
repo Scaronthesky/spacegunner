@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -22,9 +24,12 @@ public class LevelViewImpl extends Activity implements LevelView,
 		OnClickListener {
 
 	private LevelPresenter presenter;
+	
 	private IOService ioService;
+	
 	private Button buttonContinueGame;
 	private Button buttonQuitGame;
+	private Animation fadeIn;
 
 	@Override
 	public void onCreate(Bundle savedInstance) {
@@ -43,8 +48,16 @@ public class LevelViewImpl extends Activity implements LevelView,
 		this.buttonContinueGame.setOnClickListener(this);
 		this.buttonQuitGame = (Button) findViewById(R.id.buttonquitgame);
 		this.buttonQuitGame.setOnClickListener(this);
+		this.fadeIn = AnimationUtils.loadAnimation(this, R.anim.fadein);
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		View gameResultBackground = findViewById(R.id.level_background);
+		gameResultBackground.startAnimation(fadeIn);
+	}
+	
 	@Override
 	public void displayLevelAndPoints(int level, int points) {
 		TextView levelText = (TextView) findViewById(R.id.labellevel);

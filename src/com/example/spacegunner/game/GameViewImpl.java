@@ -41,11 +41,14 @@ public class GameViewImpl extends Activity implements OnClickListener, GameView 
 
 	private ViewGroup gameArea;
 	private int displayWidth;
-	private Random random;
-	private MediaPlayer mediaPlayer;
 	private long frame;
+	private Random random;
 	private ImageView destroyedShip;
+	private Animation fadeIn;
+
 	private IOService ioService;
+	private MediaPlayer mediaPlayer;
+
 	private static final String SPACESHIP_IMAGE = "spaceship_";
 	private static final String BACKGROUND_IMAGE = "background_";
 	private static final String CARDINAL_DIRECTIONS[][] = {
@@ -68,12 +71,13 @@ public class GameViewImpl extends Activity implements OnClickListener, GameView 
 		final int defaultPoints = 0;
 		final int points = getIntent().getIntExtra(Constants.POINTS,
 				defaultPoints);
+		this.fadeIn = AnimationUtils.loadAnimation(this, R.anim.fadein);
 		this.presenter = new GamePresenterImpl(this, level, points);
 	}
 
 	@Override
 	public void setBackgroundImageAndCredits(int level) {
-		final LinearLayout backgroundLayout = (LinearLayout) findViewById(R.id.background);
+		final LinearLayout backgroundLayout = (LinearLayout) findViewById(R.id.game_background);
 		final Drawable backgroundImage;
 		final TextView textCredit = (TextView) findViewById(R.id.text_credits);
 		String credits = getResources().getString(R.string.image_credits);
@@ -96,6 +100,7 @@ public class GameViewImpl extends Activity implements OnClickListener, GameView 
 		}
 		backgroundLayout.setBackground(backgroundImage);
 		textCredit.setText(credits);
+		backgroundLayout.startAnimation(fadeIn);
 	}
 
 	@Override

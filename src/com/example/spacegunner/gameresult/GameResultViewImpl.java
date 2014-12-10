@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,8 +24,11 @@ public class GameResultViewImpl extends Activity implements GameResultView,
 		OnClickListener {
 
 	private GameResultPresenter presenter;
+	
 	private Button buttonSaveHighscore;
 	private Button buttonReturnMainView;
+	private Animation fadeIn;
+
 	IOService ioService;
 
 	@Override
@@ -39,8 +44,16 @@ public class GameResultViewImpl extends Activity implements GameResultView,
 		this.buttonSaveHighscore.setOnClickListener(this);
 		this.buttonReturnMainView = (Button) findViewById(R.id.buttonreturnmain);
 		this.buttonReturnMainView.setOnClickListener(this);
+		this.fadeIn = AnimationUtils.loadAnimation(this, R.anim.fadein);
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		View gameResultBackground = findViewById(R.id.gameresult_background);
+		gameResultBackground.startAnimation(fadeIn);
+	}
+	
 	@Override
 	public void hideSaveHighscoreLayout() {
 		LinearLayout layout = (LinearLayout) findViewById(R.id.layoutHighscore);

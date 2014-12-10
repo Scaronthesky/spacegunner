@@ -35,7 +35,7 @@ public class MainViewImpl extends Activity implements OnClickListener, MainView 
 	@Override
 	public void onResume() {
 		super.onResume();
-		View background = findViewById(R.id.background);
+		View background = findViewById(R.id.main_background);
 		background.startAnimation(fadeIn);
 		displayHighscore();
 	}
